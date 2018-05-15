@@ -118,7 +118,7 @@
 <body>
 <div class="contenner">
     <div class="noExtension hide" id="noExtension">
-        NOTE: Please install <a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>  to use DDZ
+        请先安装<a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">星云钱包插件</a>！
     </div>
     <div class="main">
 		<p id="cur_joke" style="font-size:12px;">
@@ -148,6 +148,8 @@
 
 	var count = 1;
 	
+	var curJoke;
+	
 	// 设置合约地址
 	setPayConfig("n1oij7F2zUTvLqKk6sxoW6fzQw6e4gYSrtd", false);
 
@@ -161,7 +163,10 @@
     function onGetJoke(success, result) 
 	{
         if (success)
+		{
 			console.log("success, result:" + JSON.stringify(result));
+			curJoke = result;
+		}
 		else
 			console.log("fail, error:" + result);
     }
@@ -169,22 +174,53 @@
 	getJoke();
 
 	// 刷新笑话
-    $("#refresh").click(function() {
+    $("#refresh").click(function() 
+	{
 		getJoke();
 	});
 	
 	// 添加笑话
-	$("#add_joke").click(function() {
-        pay(0, "addJoke", "[\"" + $("#joke_content").val() + "\"]", cbAddJoke);
+	$("#add_joke").click(function() 
+	{
+        pay(0, "addJoke", "[\"" + $("#joke_content").val() + "\"]", onAddJoke);
     });
 
-    function cbAddJoke(success) {
+    function onAddJoke(success) 
+	{
 		if (success)
 			console.log("段子添加成功");
 		else
 			console.log("段子添加失败");
     }
 
+	// 点赞
+	$("#like").click(function() 
+	{
+		pay(0, "upVote", "[\"" + curJoke.key + "\"]", onUpVote);
+	});
+	
+    function onUpVote(success) 
+	{
+		if (success)
+			console.log("点赞成功");
+		else
+			console.log("点赞失败");
+    }	
+	
+	// 鄙视
+	$("#dislike").click(function() 
+	{
+		pay(0, "downVote", "[\"" + curJoke.key + "\"]", onDownVote);
+	});
+	
+    function onDownVote(success) 
+	{
+		if (success)
+			console.log("鄙视成功");
+		else
+			console.log("鄙视失败");
+    }	
+	
 </script>
 </body>
 
