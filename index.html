@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="full-screen" content="yes">
+
+    <title>内涵段子</title>
+    <link rel="stylesheet" href="lib/bootstrap-4.0.0-dist/css/bootstrap.min.css">
+    <style>
+        .logo {
+			text-align: center;
+			background-color: #fff;
+            height: 500px;
+            margin: auto;
+			left: 50%;
+			top: 50%;			
+        }
+
+        .name {
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .img {
+            width: 48%;
+            height: 53%;
+            margin: auto;
+            margin-top: 38px;
+        }
+
+        .img img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .search {
+            width: 80%;
+            height: 100px;
+            margin: auto;
+        }
+
+        .noExtension {
+            width: 60%;
+            height: 100px;
+            margin: auto;
+            font-size: 23px;
+        }
+
+        #search_value {
+            width: 80%;
+            height: 50px;
+            box-shadow: 3px 5px grey, 1px 1px #333;
+        }
+
+        .search button {
+            width: 18%;
+            height: 50px;
+            margin-left: 6px;
+            box-shadow: 3px 5px grey, 1px 1px #333;
+        }
+
+        .hide{
+            display: none;
+        }
+
+        .contenner{
+            background: url("img/bg.jpg");
+            height: 1500px;
+        }
+		.main{
+			text-align: center;
+			background-color: #fff;
+			border-radius: 20px;
+			width: 300px;
+			height: 150px;
+			position: absolute;
+			left: 50%;
+			top: 20%;
+			transform: translate(-50%,-50%);
+		}		
+		#like{
+			position:absolute;
+			left: 10%;
+			top:  80%;
+		}		
+		#dislike{
+			position:absolute;
+			left: 20%;
+			top:  80%;
+		}		
+		#refresh{
+			position:absolute;
+			left: 50%;
+			top:  80%;
+		}	
+		#join{
+			position:absolute;
+			left: 70%;
+			top:  80%;
+		}	
+		.add{
+			text-align: center;
+			border-radius: 20px;
+			width: 300px;
+			height: 200px;
+			position: absolute;
+			left: 50%;
+			top: 45%;
+			transform: translate(-50%,-50%);
+		}	
+    </style>
+</head>
+
+<body>
+<div class="contenner">
+    <div class="noExtension hide" id="noExtension">
+        NOTE: Please install <a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>  to use DDZ
+    </div>
+    <div class="main">
+		<p id="cur_joke" style="font-size:12px;">
+		
+		</p>
+		<img id="like" src="img/like.jpg"/>
+		<img id="dislike" src="img/dislike.jpg"/>
+		<br>
+        <button id="refresh">换一个</button>
+		<button id="join">我来讲</button>
+    </div>
+
+    <div class="add">
+		<textarea id="joke_content" ></textarea>
+		<button id="add_joke">添加</button>
+    </div>
+    <div id="overlay" class="div_overlay">
+    </div>	
+</div>
+<script src=lib/jquery-3.3.1.min.js></script>
+<script src=lib/nebPay.js></script>
+<script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
+<script src=lib/nebulas.js></script>
+<script src=lib/util.js></script>
+<script>
+    "use strict";
+
+	var count = 1;
+	
+	// 设置合约地址
+	setPayConfig("n1oij7F2zUTvLqKk6sxoW6fzQw6e4gYSrtd", false);
+
+    // 获取随机一个笑话
+	function getJoke()
+	{
+		silentGet("getJoke", "[]", onGetJoke);
+	}
+	
+    //return of getJoke
+    function onGetJoke(success, result) 
+	{
+        if (success)
+			console.log("success, result:" + JSON.stringify(result));
+		else
+			console.log("fail, error:" + result);
+    }
+	
+	getJoke();
+
+	// 刷新笑话
+    $("#refresh").click(function() {
+		getJoke();
+	});
+	
+	// 添加笑话
+	$("#add_joke").click(function() {
+        pay(0, "addJoke", "[\"" + $("#joke_content").val() + "\"]", cbAddJoke);
+    });
+
+    function cbAddJoke(success) {
+		if (success)
+			console.log("段子添加成功");
+		else
+			console.log("段子添加失败");
+    }
+
+</script>
+</body>
+
+</html>
