@@ -8,74 +8,47 @@
     <meta name="x5-fullscreen" content="true">
     <meta name="full-screen" content="yes">
 
-    <title>内涵段子</title>
+    <title>笑话乐园</title>
     <link rel="stylesheet" href="lib/bootstrap-4.0.0-dist/css/bootstrap.min.css">
     <style>
         .logo {
 			text-align: center;
 			background-color: #fff;
-            height: 500px;
+            height: 10;
             margin: auto;
 			left: 50%;
 			top: 50%;			
         }
-
-        .name {
-            text-align: center;
-            font-size: 15px;
+		#header{
+			height:20px;
+			color:white;
+			font-size: 30px;
+		}		
+        .contenner{
+            background: url("img/bg.jpg");
+            height: 1500px;
+			text-align: center;
         }
-
         .img {
             width: 48%;
             height: 53%;
             margin: auto;
             margin-top: 38px;
         }
-
-        .img img {
-            width: 100%;
-            height: 100%;
-        }
-
-        .search {
-            width: 80%;
-            height: 100px;
-            margin: auto;
-        }
-
         .noExtension {
             width: 60%;
             height: 100px;
             margin: auto;
             font-size: 23px;
         }
-
-        #search_value {
-            width: 80%;
-            height: 50px;
-            box-shadow: 3px 5px grey, 1px 1px #333;
-        }
-
-        .search button {
-            width: 18%;
-            height: 50px;
-            margin-left: 6px;
-            box-shadow: 3px 5px grey, 1px 1px #333;
-        }
-
         .hide{
             display: none;
         }
-
-        .contenner{
-            background: url("img/bg.jpg");
-            height: 1500px;
-        }
 		.main{
 			text-align: center;
-			background-color: #fff;
-			border-radius: 20px;
-			width: 300px;
+			background-color: #4FC1E9;
+			border-radius: 5px;
+			width: 500px;
 			height: 150px;
 			position: absolute;
 			left: 50%;
@@ -84,34 +57,69 @@
 		}		
 		#like{
 			position:absolute;
-			left: 10%;
+			left: 3%;
 			top:  80%;
+		}
+		#upvote_num{
+			position:absolute;
+			left: 10%;
+			top:  79%;
 		}		
 		#dislike{
 			position:absolute;
-			left: 20%;
+			left: 18%;
 			top:  80%;
+		}	
+		#downvote_num{
+			position:absolute;
+			left: 25%;
+			top:  79%;
 		}		
 		#refresh{
 			position:absolute;
-			left: 50%;
-			top:  80%;
-		}	
+			left: 70%;
+			top:  76%;
+		}
+		#cur_joke{
+            text-align: center;
+            font-size: 15px;
+		}
 		#join{
 			position:absolute;
-			left: 70%;
-			top:  80%;
+			left: 85%;
+			top:  76%;
 		}	
+		#joke_content{
+			border-radius: 5px;
+			width: 400px;
+			height: 120px;
+			position: absolute;
+			left: 45%;
+			top: 50%;
+			transform: translate(-50%,-50%);
+		}		
 		.add{
+			display:none;
 			text-align: center;
-			border-radius: 20px;
-			width: 300px;
-			height: 200px;
+			background-color: #4FC1E9;
+			border-radius: 5px;
+			width: 500px;
+			height: 150px;
 			position: absolute;
 			left: 50%;
-			top: 45%;
+			top: 20%;
 			transform: translate(-50%,-50%);
-		}	
+		}
+		#cancel_joke{
+			position:absolute;
+			left: 88%;
+			top:  50%;
+		}		
+		#add_joke{
+			position:absolute;
+			left: 88%;
+			top:  70%;
+		}
     </style>
 </head>
 
@@ -120,12 +128,26 @@
     <div class="noExtension hide" id="noExtension">
         请先安装<a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">星云钱包插件</a>！
     </div>
+	<p id="header">
+
+	</p>	
+	<p id="header">
+		笑一笑，十年少
+	</p>
+	
     <div class="main">
-		<p id="cur_joke" style="font-size:12px;">
+		<p id="header">
+		
+		</p>
+		<p id="cur_joke">
 		
 		</p>
 		<img id="like" src="img/like.jpg"/>
+		<p id="upvote_num">0
+		</p>
 		<img id="dislike" src="img/dislike.jpg"/>
+		<p id="downvote_num">0
+		</p>		
 		<br>
         <button id="refresh">换一个</button>
 		<button id="join">我来讲</button>
@@ -133,6 +155,7 @@
 
     <div class="add">
 		<textarea id="joke_content" ></textarea>
+		<button id="cancel_joke">取消</button>
 		<button id="add_joke">添加</button>
     </div>
     <div id="overlay" class="div_overlay">
@@ -151,7 +174,7 @@
 	var curJoke;
 	
 	// 设置合约地址
-	setPayConfig("n1oij7F2zUTvLqKk6sxoW6fzQw6e4gYSrtd", false);
+	setPayConfig("n1iqvTDn3xy31RfV8AMY7gRTpSdexcDEeg4", true);
 
     // 获取随机一个笑话
 	function getJoke()
@@ -166,6 +189,9 @@
 		{
 			console.log("success, result:" + JSON.stringify(result));
 			curJoke = result;
+			$("#cur_joke").text(decodeURI(result.value || "还没有笑话，讲一个吧。"));
+			$("#upvote_num").text(result.upVoteNum);
+			$("#downvote_num").text(result.downVoteNum);
 		}
 		else
 			console.log("fail, error:" + result);
@@ -173,24 +199,55 @@
 	
 	getJoke();
 
+	$(".add").hide();
+	$("#join").click(function() 
+	{
+		$(".main").hide();
+		$(".add").show();
+	});
+	
+	
 	// 刷新笑话
     $("#refresh").click(function() 
 	{
 		getJoke();
 	});
+
+	// 取消添加笑话
+	$("#cancel_joke").click(function() 
+	{
+		$(".main").show();
+		$(".add").hide();	
+	});
 	
 	// 添加笑话
 	$("#add_joke").click(function() 
 	{
-        pay(0, "addJoke", "[\"" + $("#joke_content").val() + "\"]", onAddJoke);
+		var value = $("#joke_content").val();
+		if (value == "")
+		{
+			alert("请输入笑话内容！");
+			return;
+		}
+		
+		if (value.length > 400)
+		{
+			alert("笑话内容过长！");
+			return;		
+		}
+	
+        pay(0, "addJoke", "[\"" + encodeURI(value) + "\"]", onAddJoke);
     });
 
     function onAddJoke(success) 
 	{
+		$(".main").show();
+		$(".add").hide();	
+	
 		if (success)
-			console.log("段子添加成功");
+			alert("段子添加成功");
 		else
-			console.log("段子添加失败");
+			alert("段子添加失败");
     }
 
 	// 点赞
